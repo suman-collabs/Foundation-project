@@ -96,31 +96,25 @@ Use positive and negative test data found for [credentials length](#requirement-
 
 #### Requirement: Passwords should never be visible in plain text
 
-| username | password |
-| -------- | -------------- | <------ While logging in
-| Batman | I am the night |
-
-| username | password |
-| -------- | ------------ | <------- While creating a new user
-| Joker | I am the day |
+| Username | Password       |
+| -------- | -------------- |
+| Batman   | I am the night |
+| Joker    | I am the night |
 
 #### Requirement: Only logged in Users should be able to access the Planetarium home page
 
-| logged in user |
-| -------------- |
-| Batman         |
+| Username | Password       |
+| -------- | -------------- |
+| Batman   | I am the night |
 
 link: http://localhost:8080/
 
 #### Requirement: Users should only be able to interact with resources they have added to the Planetarium
 
 -Equivalence Partition
-| Batman's resources | Joker's resources |
-|----------|-------|
+-For this, we make sure newly created User 'Joker' doesn't see any information he hasn't added.
 
 #### Acceptance Testing Data
-
-Use positive and negative test data found for logged in user
 
 ### Test Scenarios
 
@@ -133,16 +127,11 @@ Use positive and negative test data found for logged in user
 
 #### Parameterized Test Scenario
 
-| Step                                    | Actor | Data                   | Result                              |
-| --------------------------------------- | ----- | ---------------------- | ----------------------------------- |
-| Given the user is on the login page     | User  | http://localhost:8080/ |                                     |
-| user provides <username> and <password> | User  | <username>,<password>  | should be directed to the home page |
-
-- To see the user can't access other user's resources
-  | Step | Actor | Data | Result |
-  |------|--------|-----|-------|
-  |Given the user is on the login page|Username: "Batman" Password "I am the night" | http://localhost:8080/| |
-  |the user explores |
+| Step                                                                                                | Data                   | Result                                    |
+| --------------------------------------------------------------------------------------------------- | ---------------------- | ----------------------------------------- |
+| Given the user is on the login page                                                                 | http://localhost:8080/ |                                           |
+| when the user provides Username: <Username> and Password: <Password> , and clicks the log in button | <username>,<password>  | should be directed to the home page       |
+| user is given access to the resource                                                                | N/A                    | Access to User added ressources displayed |
 
 ### Use Case Id: 3
 
@@ -150,18 +139,28 @@ Use positive and negative test data found for logged in user
 - Actors:
   - Logged in User
 
+### Pre-requirement:
+
+- Username 'Batman' present in the database
+- Username 'Joker' not present but added later while testing to the database
+
 ### Test Data
 
-#### Requirement: Only logged-in Users should be able to access the Planetarium home page
+#### Requirement: Only logged in Users should be able to access the Planetarium home page
 
-| username | password         |
-| -------- | ---------------- |
-| Batman   | 'I am the night' |
-| Joker    | 'I am the day'   |
+| Username | Password       |
+| -------- | -------------- |
+| Batman   | I am the night |
+
+link: http://localhost:8080/
 
 #### Requirement: Planets should be "owned" by the user that added them to the Planetarium
 
-- Exploratory and Error Guessing Testing needed here.
+| Username | Password       |
+| -------- | -------------- |
+| Joker    | I am the night |
+
+-Exploratory and error guess testing to see if the newly added User 'Joker' doesn't own any planet and have no access to other's resources.
 
 #### Requirement: Users should only be able to interact with resources they have added to the Planetarium
 
@@ -179,25 +178,27 @@ Use positive and negative test data found for logged in user
   - Actors
     - Logged in User
 
+### Pre-requirement:
+
+- Username 'Batman' present in the database
+- Planet 'Earth" present in the database
+- Planet 'Jupiter' not present in the database
+
 ## Test Data
 
 #### Requirement: Planet and Moon names should not have more than 30 characters
 
-| 0 character Planet name | 30 characters Planet name       | 31 characters Planet name        |
-| ----------------------- | ------------------------------- | -------------------------------- |
-|                         | ThisIsAPlanetWith30characters01 | ThisIsAPlanetWith31characters022 |
-
-| 0 character Moon name | 30 characters Moon name        | 31 characters Moon name         |
-| --------------------- | ------------------------------ | ------------------------------- |
-|                       | ThisIsAMoonWith30characters011 | ThisIsAMoonWith31characters0212 |
+| 0 character Planet name | 30 characters Planet name      | 31 characters Planet name       |
+| ----------------------- | ------------------------------ | ------------------------------- |
+|                         | ThisIsAPlanetWith30characters0 | ThisIsAPlanetWith31characters01 |
 
 #### Requirements: Planets should be “owned” by the user that added it to the Planetarium
 
--
+- Exploratory testin to check for the owner id# of the planet matches the Id# of the User.
 
 #### Requirements: "Planets and moons should have unique names
 
--- No same name regardless of Lowercase/uppercase letters
+-- No same name regardless of Lowercase/Uppercase letters
 
 | Unique Planet name | Duplicate Planet name |
 | ------------------ | --------------------- |
@@ -206,12 +207,10 @@ Use positive and negative test data found for logged in user
 
 #### Requirements: Planets and Moons should allow adding an associated image, but it is not required for the data to be added to the database
 
-| Photo of Planet Jupiter | Only Name of Planet Jupiter |
-| ----------------------- | --------------------------- |
-
-### Acceptance Testing Data
-
-Use positive and negative testing data found for [unique names](#requirements-planets-and-moons-should-have-unique-names) and [photo](#requirements-planets-and-moons-should-allow-adding-an-associated-image-but-it-is-not-required-for-the-data-to-be-added-to-the-database)
+| Planet  | Planet Photo      |
+| ------- | ----------------- |
+| Jupiter | no value          |
+| Jupiter | Photo_Jupiter.jpg |
 
 #### Environment Data
 
@@ -225,54 +224,41 @@ Use positive and negative testing data found for [unique names](#requirements-pl
 
 ### Decision Table For Planet/Moon Character Length Requirement Testing
 
-| Planet Name                      | Moon Name                       | Action Addition result | Redirect                              |
-| -------------------------------- | ------------------------------- | ---------------------- | ------------------------------------- |
-|                                  |                                 | Nothing added          | Stay on home page                     |
-|                                  | ThisIsAMoonWith30characters011  | nothing added          | Stay on home page                     |
-|                                  | ThisIsAMoonWith31characters0212 | Nothing Added          | Stay on Home Page                     |
-| ThisIsAPlanetWith30characters01  |                                 | Planet Added           | Refreshed home page with updated list |
-| ThisIsAPlanetWith30characters01  | ThisIsAMoonWith30characters011  | Planet and Moon Added  | Refreshed home page with updated list |
-| ThisIsAPlanetWith30characters01  | ThisIsAMoonWith31characters0212 | Nothing Added          | Stay on Home Page                     |
-| ThisIsAPlanetWith31characters022 |                                 | Nothing Added          | Stay on Home Page                     |
-| ThisIsAPlanetWith31characters022 | ThisIsAMoonWith30characters011  | Nothing added          | Stay on Home page                     |
-| ThisIsAPlanetWith31characters022 | ThisIsAMoonWith31characters0212 | Nothing added          | Stay on Home page                     |
+- No value Planet Name
+- 30 Character Planet Name
+- 31 Character Planet Name
+
+| Planet Name                     | Planet Photo      |
+| ------------------------------- | ----------------- |
+|                                 | Photo_jupiter.jpg |
+| ThisIsAPlanetWith30characters0  | Photo_Jupiter.jpg |
+| ThisIsAPlanetWith31characters01 | Photo_Jupiter.jpg |
 
 ### Decision Table for Unique Planet and Moon name
 
-| Planet Name | Action and message    |
-| ----------- | --------------------- |
-| Saturn      | Planet added          |
-| Earth       | Planet exists already |
-
---
-
-| Moon Name | Action and message  |
-| --------- | ------------------- |
-| Dione     | Moon added          |
-| Luna      | Moon exists already |
+| Planet Name | Action and message               |
+| ----------- | -------------------------------- |
+| Earth       | Planet not added, exists already |
+| earth       | Planet not added, exists already |
+| Jupiter     | Planet added                     |
 
 ### Decision Table for Planets and Moon to allow an associated image, but not required for the date to be added to the database
 
-| Photo        | Name   | Result                            | Redirect                                   |
-| ------------ | ------ | --------------------------------- | ------------------------------------------ |
-| Saturn photo | Saturn | Photo and Planet added            | Refreshed Home Page                        |
-| Saturn Photo |        | Not Added                         | Need names of planet to be added           |
-|              | Saturn | Planet adedd                      | Refreshed Home Page with only name appears |
-|              |        | need planet name / name and photo | stay on home page                          |
-
-| Moon Photo | Moon Name | Result               | Redirect                                   |
-| ---------- | --------- | -------------------- | ------------------------------------------ |
-| Luna photo | Luna      | Photo and Moon added | Refreshed Home Page                        |
-| Luna Photo |           | Not Added            | Need names of moon to be added             |
-|            | Luna      | Planet adedd         | Refreshed Home Page with only name appears |
+| Photo         | Name    | Result                            | Redirect                                   |
+| ------------- | ------- | --------------------------------- | ------------------------------------------ |
+| Jupiter photo | Jupiter | Photo and Planet added            | Refreshed Home Page                        |
+| Jupiter Photo |         | Not Added                         | Need names of planet to be added           |
+|               | Jupiter | Planet adedd                      | Refreshed Home Page with only name appears |
+|               |         | need planet name / name and photo | stay on home page                          |
 
 ## Parameterized Test scenario
 
-| Step                                          | Actor          | Data                     | Result                                  |
-| --------------------------------------------- | -------------- | ------------------------ | --------------------------------------- |
-| Given the user is on the home page            | User           | http://localhost:8080/   | should be at Home Page                  |
-| User provides valid {username} and {password} | User           | {username}, {password}   |                                         |
-| User provides valid planet and moon names     | Logged in User | names of planet and moon | {page refreshed and planet/moon added } |
+| Step                                                                                                   | Actor | Data                         | Result                                  |
+| ------------------------------------------------------------------------------------------------------ | ----- | ---------------------------- | --------------------------------------- |
+| Given the user is on the home page                                                                     | User  | http://localhost:8080/       | should be at Home Page                  |
+| User provides valid {username} and {password}                                                          | User  | {username}, {password}       |                                         |
+| User selects Planet from the drop down list and enters planet name and clicks the submit planet button | User  | Planet Name and Planet Photo | {page refreshed and planet/moon added } |
+| Planet is added/not added                                                                              | User  |                              | Planet added/not added                  |
 
 ### Use Case Id: 5
 
@@ -280,9 +266,16 @@ Use positive and negative testing data found for [unique names](#requirements-pl
   - Actors
     - Logged in User
 
+#### Pre-requirement:
+
+- Username 'Batman' present in the database
+- Planet 'Earth', Moon 'Luna' present in the database
+- Planet 'Jupier' not present which will be added while testing
+- No Moon added for the Planet Jupiter
+
 ## Test Data
 
-#### Requirement:Users should only be able to interact with resources they have added to the Planetarium
+#### Requirement: Users should only be able to interact with resources they have added to the Planetarium
 
 | User   | Resources        |
 | ------ | ---------------- |
@@ -294,9 +287,7 @@ Use positive and negative testing data found for [unique names](#requirements-pl
 | User/Owner | Planets owned by User | Planets not owned by User |
 | ---------- | --------------------- | ------------------------- |
 | Batman     | Earth, Mars           | Jupiter                   |
-| Spiderman  | Jupiter               | Earth, Mars               |
-
-### Acceptance Testing Data
+| Joker      | Jupiter               | Earth, Mars               |
 
 #### Environment Data
 
@@ -310,20 +301,21 @@ Use positive and negative testing data found for [unique names](#requirements-pl
 
 ### Decision Table for Deletion Criteria
 
-| Drop-down button | Name           | Result                                        |
-| ---------------- | -------------- | --------------------------------------------- |
-| Planet           |                | Error(provide a name) and stay on Home page   |
-| Planet           | Name of Planet | Refreshed and updated Home page               |
-| Planet           | Name of Moon   | Error(Wrong Name/Type ) and stay on Home page |
-| Moon             | Name of Planet | Error(Wrong Name/Type ) and stay on Home page |
+| Planet Name | Moon    |
+| ----------- | ------- |
+| Earth       | Moon    |
+| Jupiter     | No moon |
 
 ## Parameterized Test scenario
 
-| Step                               | Actor          | Data                              | Result                           |
-| ---------------------------------- | -------------- | --------------------------------- | -------------------------------- |
-| given the user is on the home page | Logged in User | http://localhost:8080/planetarium | Home page with list of resources |
+| Step                                                                                                   | Actor          | Data                              | Result                               |
+| ------------------------------------------------------------------------------------------------------ | -------------- | --------------------------------- | ------------------------------------ |
+| given the user is on the home page                                                                     | Logged in User | http://localhost:8080/planetarium | Home page with list of resources     |
+| User provides valid {username} and {password}                                                          | User           | {username}, {password}            |                                      |
+| User selects Planet from the drop down list and enters planet name and clicks the delete planet button | User           | Planet Name                       | {page refreshed and planet removed } |
+| Planet is removed                                                                                      | User           |                                   | Planet removed                       |
 
-| User provides resources' valid name and type | User | Names of Planet/Moon | Refreshed and Updated Home Page |
+| User provides resources' valid name and type | User | Names of Planet | Refreshed and Updated Home Page |
 
 ### Use Case Id: 6
 
@@ -331,40 +323,40 @@ Use positive and negative testing data found for [unique names](#requirements-pl
   -Actors
   -Logged in User
 
+### Pre-requirement:
+
+- Username 'Batman' present in the database
+- Jupiter added to the database
+- Moon 'Europa' not present in the database
+
 ## Test Data
 
 #### Requirement: Moons should be “owned” by the Planet the User adding the moon associated it with
 
-| Planet names | Moon names |
-| ------------ | ---------- |
-| Earth        | Luna       |
-| Mars         | Titan      |
+| Planet Id | Moon names | Owner Id |
+| --------- | ---------- | -------- |
+| 1         | Europa     | 1        |
 
 #### Requirement: Planet and Moon names should not have more than 30 characters
 
-| 0 character Planet name | 30 characters Planet name       | 31 characters Planet name        |
-| ----------------------- | ------------------------------- | -------------------------------- |
-|                         | ThisIsAPlanetWith30characters01 | ThisIsAPlanetWith31characters022 |
-
 | 0 character Moon name | 30 characters Moon name        | 31 characters Moon name         |
 | --------------------- | ------------------------------ | ------------------------------- |
-|                       | ThisIsAMoonWith30characters011 | ThisIsAMoonWith31characters0212 |
+|                       | ThisIsAMoonWith30characters012 | ThisIsAMoonWith31characters0123 |
 
 #### Requirement: Planets and Moons should allow adding an associated image, but it is not required for the data to be added to the database
-
-| Photo        | Name   | Result                 | Redirect                                   |
-| ------------ | ------ | ---------------------- | ------------------------------------------ |
-| Saturn photo | Saturn | Photo and Planet added | Refreshed Home Page                        |
-| Saturn Photo |        | Not Added              | Need names of planet to be added           |
-|              | Saturn | Planet adedd           | Refreshed Home Page with only name appears |
 
 | Moon Photo | Moon Name | Result               | Redirect                                   |
 | ---------- | --------- | -------------------- | ------------------------------------------ |
 | Luna photo | Luna      | Photo and Moon added | Refreshed Home Page                        |
-| Luna Photo |           | Not Added            | Need names of moon to be added             |
 |            | Luna      | Planet adedd         | Refreshed Home Page with only name appears |
 
-### Acceptance Testing Data
+#### Requirement: Moons should have unique name
+
+| Moon Name | Moon Photo |
+| --------- | ---------- |
+| Luna      | Photo_Luna |
+| luna      | Photo_Luna |
+| Tuna      | Photo      |
 
 #### Environment Data
 
@@ -376,26 +368,21 @@ Use positive and negative testing data found for [unique names](#requirements-pl
 
 ## Test Scenarios
 
-### Decision Table for moons should be owned by the Planet the User adding the moon associated it with
+### Decision Table for Moon's unique Name
 
-| Planet name | Moon name |
-| ----------- | --------- |
-| Earth       | Luna      |
-| Mars        | Titan     |
+| Moon Name | Moon Result |
+| --------- | ----------- |
+| Luna      | failed      |
+| luna      | failed      |
+| Tuna      | passed      |
 
 ### Decision Table for Moon's Character Length Limit
 
-| Planet Name                      | Moon Name                       | Action Addition result | Redirect                              |
-| -------------------------------- | ------------------------------- | ---------------------- | ------------------------------------- |
-|                                  |                                 | Nothing added          | Stay on home page                     |
-|                                  | ThisIsAMoonWith30characters011  | nothing added          | Stay on home page                     |
-|                                  | ThisIsAMoonWith31characters0212 | Nothing Added          | Stay on Home Page                     |
-| ThisIsAPlanetWith30characters01  |                                 | Planet Added           | Refreshed home page with updated list |
-| ThisIsAPlanetWith30characters01  | ThisIsAMoonWith30characters011  | Planet and Moon Added  | Refreshed home page with updated list |
-| ThisIsAPlanetWith30characters01  | ThisIsAMoonWith31characters0212 | Nothing Added          | Stay on Home Page                     |
-| ThisIsAPlanetWith31characters022 |                                 | Nothing Added          | Stay on Home Page                     |
-| ThisIsAPlanetWith31characters022 | ThisIsAMoonWith30characters011  | Nothing added          | Stay on Home page                     |
-| ThisIsAPlanetWith31characters022 | ThisIsAMoonWith31characters0212 | Nothing added          | Stay on Home page                     |
+| Moon Name                       | Action Addition result | Redirect          |
+| ------------------------------- | ---------------------- | ----------------- |
+|                                 | Nothing added          | Stay on home page |
+| ThisIsAMoonWith30characters012  | Moon added             | Stay on home page |
+| ThisIsAMoonWith31characters0123 | Nothing Added          | Stay on Home Page |
 
 ## Parameterized Test scenario
 
@@ -411,20 +398,22 @@ Use positive and negative testing data found for [unique names](#requirements-pl
   -Actors
   -Logged in User
 
+### Pre-requirement:
+
+- Username 'Batman' with Id#1 present in the database
+
 ## Test Data
 
 #### Requirement: Moons should be “owned” by the Planet the User adding the moon associated it with
 
-| Planets | Moon owned |
-| ------- | ---------- |
-| Earth   | Luna       |
-| Mars    | Titan      |
+| Moon Name | Moon Id | User Id |
+| --------- | ------- | ------- |
+| Luna      | 1       | 1       |
+| Titan     | 2       | 2       |
 
 #### Requirement: Users should only be able to interact with resources they have added to the Planetarium
 
     - Exploratory and error guess testing to see if you can acces other user's resources
-
-### Acceptance Testing Data
 
 #### Environment Data
 
@@ -448,8 +437,33 @@ Use positive and negative testing data found for [unique names](#requirements-pl
 
 ## Parameterized Test scenario
 
-| Step                                            | Actor | Data                              | Result                     |
-| ----------------------------------------------- | ----- | --------------------------------- | -------------------------- |
-| given the user is on the home page              | User  | http://localhost:8080/planetarium |                            |
-| user selects moon and valid moon name/planetId/ | User  |                                   | Page refreshed and Updated |
-| Moon deleted                                    | User  |                                   | Page refreshed             |
+| Step                                                                                                | Actor | Data                                          | Result                              |
+| --------------------------------------------------------------------------------------------------- | ----- | --------------------------------------------- | ----------------------------------- |
+| given the user is on the home page                                                                  | User  | http://localhost:8080/planetarium             |                                     |
+| when the user provides Username: <Username> and Password: <Password> , and clicks the log in button | User  | Username: <Username> and Password: <Password> | Redirected to Planetarium Home Page |
+| Moon deleted                                                                                        | User  |                                               | Page refreshed                      |
+
+###Acceptane Testing
+
+- Is the intended use of the service intuitive?
+- Is the service easy to use?
+- Does the service inspire confidence?
+- Is the service pleasing to look at?
+
+The app works as intended and performs the functions as requirements; however, it can be improved in many areas to make the user's experience easy and smooth.
+The intended use of the service is intuitive in general. The user can naturally navigate and use the service without following detailed instruction.
+However, the service doesn't inspire confidence beacause of security isssue being compromised. The service could also see some improvements in the User Interface.
+
+- As a general user, on the home page, "Create an Account" button should have been larger.
+- While typing the password, "show password" option should have been added, and required to enter the password again for confirmation
+- When the account is created, the display message shouldn't have shown the password which is a huge security issue
+- There should have been a link to take you back to the login page, or it should have taken the user directly to the home page
+- The alert messages when error occurs are vague and should be specific to let the user know about the issue like:
+  - When no unique username is provided, "user already exists" is a better alert message than failed
+  - When adding already existing planet, "Planet already exists" message should be displayed instead of just failed.
+  - When removing Planet/Moon, clear alert message with the reason and instruction should be displayed for the user.
+  - When adding only photo. "Enter name of the Planet/Moon" should be displayed instead of just failed.
+  - When adding duplicate values, "Resources already exist" messages should be displayed.
+  - The Planet/Moon could be managed and sorted with sort by options, and related resources should have been displayed together.
+
+Due to these issues, even though the intended use of service is intuitive and easy to use, the service doesn't provide the user with sense of security, and doesn't inspire confidence with so many critical issues. The home page is good with the good background of universe, but the login page of the application is not pleasing to look at and doesn't keep up with the theme of the app and the home page.
