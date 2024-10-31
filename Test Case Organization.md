@@ -443,7 +443,7 @@ link: http://localhost:8080/
 | when the user provides Username: <Username> and Password: <Password> , and clicks the log in button | User  | Username: <Username> and Password: <Password> | Redirected to Planetarium Home Page |
 | Moon deleted                                                                                        | User  |                                               | Page refreshed                      |
 
-###Acceptane Testing
+## Acceptance Testing
 
 - Is the intended use of the service intuitive?
 - Is the service easy to use?
