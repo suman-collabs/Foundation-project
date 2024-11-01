@@ -1,4 +1,5 @@
 Accpetance Testing Summary Report
+
 The app works as intended and performs the functions as requirements; however, it can be improved in many areas to make the user's experience easy and smooth. The intended use of the service is intuitive in general. The user can naturally navigate and use the service without following detailed instruction. However, the service doesn't inspire confidence beacause of security isssue being compromised. The service could also see some improvements in the User Interface.
 
 Specific Issues:
