@@ -1,19 +1,59 @@
-Accpetance Testing Summary Report
+## Acceptance Testing Summary Report
 
-The app works as intended and performs the functions as requirements; however, it can be improved in many areas to make the user's experience easy and smooth. The intended use of the service is intuitive in general. The user can naturally navigate and use the service without following detailed instruction. However, the service doesn't inspire confidence beacause of security isssue being compromised. The service could also see some improvements in the User Interface.
+### Overview
 
-Specific Issues:
+The application functions according to requirements and generally allows users to navigate and complete tasks intuitively. Users can use the service without needing detailed instructions, and the service's intended purpose is clear. However, multiple areas require improvement to enhance user experience, security, and interface cohesion. While the application is easy to navigate, significant security concerns and user interface issues undermine user confidence and the overall user experience.
 
-As a general user, on the home page, "Create an Account" button should have been larger.
-While typing the password, "show password" option should have been added, and required to enter the password again for confirmation
-When the account is created, the display message shouldn't have shown the password which is a huge security issue
-There should have been a link to take you back to the login page, or it should have taken the user directly to the home page
-The alert messages when error occurs are vague and should be specific to let the user know about the issue like:
-When no unique username is provided, "user already exists" is a better alert message than failed
-When adding already existing planet, "Planet already exists" message should be displayed instead of just failed.
-When removing Planet/Moon, clear alert message with the reason and instruction should be displayed for the user.
-When adding only photo. "Enter name of the Planet/Moon" should be displayed instead of just failed.
-When adding duplicate values, "Resources already exist" messages should be displayed.
-The Planet/Moon could be managed and sorted with sort by options, and related resources should have been displayed together.
+#### Key Finding
 
-Due to these issues, even though the intended use of service is intuitive and easy to use, the service doesn't provide the user with sense of security, and doesn't inspire confidence with so many critical issues. The home page is good with the good background of universe, but the login page of the application is not pleasing to look at and doesn't keep up with the theme of the app and the home page.
+##### Security Issues
+
+Critical Security Concern: Passwords are displayed in plain text upon account creation, which poses a major security risk.
+Unauthorized Access: Users can access other users' resources, a severe issue that compromises data security and privacy.
+Lack of User Control Over Credentials:
+A "show password" feature is absent during password entry.
+Users are not prompted to confirm their password during account creation.
+
+###### User Interface & Navigation
+
+Home Page:
+The “Create an Account” button is too small, making it less visible and accessible for new users.
+Navigation Flow:
+After creating an account, users should either be redirected to the login page or taken directly to the home page. A “Return to Login” link would streamline this process.
+Inconsistent Design:
+While the home page has an engaging universe-themed background, the login page lacks a visually appealing design and does not align with the overall theme.
+Sorting and Organization:
+Planets and Moons lack sorting options, which could help users manage their resources. Related resources should also be displayed together for easier navigation.
+
+##### User Feedback & Alert Messages
+
+Vague Error Messages: Error alerts should provide specific guidance, helping users identify and correct issues.
+Examples:
+Duplicate username: Display "User already exists" instead of "Failed."
+Duplicate planet: Display "Planet already exists" instead of "Failed."
+Missing planet/moon name: Display "Enter name of the Planet/Moon."
+Duplicate resource: Display "Resource already exists."
+Planet/moon deletion: Provide a clear alert with instructions and the reason for the error.
+Password Confirmation: Users are not required to confirm their password, potentially leading to account access issues due to typos.
+
+### Recommendations
+
+#### Security Enhancements:
+
+Avoid displaying passwords in any user-facing messages.
+Implement access control to prevent unauthorized users from viewing or modifying other users' resources.
+Add a "show password" feature during password entry and require a password confirmation field for account creation.
+
+#### User Interface Improvements:
+
+Increase the size of the "Create an Account" button on the home page for better visibility.
+Update the login page design to align with the universe theme of the home page, creating a cohesive and visually appealing experience.
+
+#### Enhanced User Feedback:
+
+Ensure all alert messages are specific and user-friendly, guiding users to resolve errors effectively.
+Add sorting and organization options for planets and moons, and display related resources together.
+
+### Conclusion
+
+While the application largely meets functional requirements and provides an intuitive user experience, significant improvements are required to ensure security, enhance the user interface, and optimize the navigation flow. Addressing these issues will inspire greater user confidence and create a smoother, more secure experience.
